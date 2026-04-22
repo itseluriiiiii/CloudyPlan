@@ -80,7 +80,7 @@ $$J(x) = \frac{(\sum_{i=1}^n x_i)^2}{n \sum_{i=1}^n x_i^2}$$
 ## 👥 Development Team
 - **Arnav Eluri**
 - **Abhilash KM**
-- **Akshay K**
+- **Akshay Kumar M**
 - **Anish Shetty**
 
 ---
