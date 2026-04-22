@@ -12,23 +12,38 @@ class DynamicScheduler:
         return self.get_progress_summary()
     
     def get_progress_summary(self) -> Dict[str, Any]:
-        summary = []
+        # Aggregate planned hours by subject_id first
+        subject_aggregation = {}
         
         for day_data in self.current_allocations:
             for alloc in day_data.get("allocations", []):
                 subj_id = alloc.get("subject_id", "")
-                planned = alloc.get("allocated_hours", 0)
-                completed = self.progress_data.get(subj_id, 0)
-                remaining = max(0, planned - completed)
+                if not subj_id: continue
                 
-                summary.append({
-                    "subject_id": subj_id,
-                    "subject_name": alloc.get("subject_name", ""),
-                    "planned_hours": planned,
-                    "completed_hours": completed,
-                    "remaining_hours": remaining,
-                    "progress_percent": round((completed / planned * 100) if planned > 0 else 0, 1)
-                })
+                if subj_id not in subject_aggregation:
+                    subject_aggregation[subj_id] = {
+                        "subject_id": subj_id,
+                        "subject_name": alloc.get("subject_name", ""),
+                        "total_planned": 0.0,
+                        "difficulty": alloc.get("difficulty", 3)
+                    }
+                subject_aggregation[subj_id]["total_planned"] += alloc.get("allocated_hours", 0)
+        
+        summary = []
+        for subj_id, data in subject_aggregation.items():
+            planned = data["total_planned"]
+            completed = self.progress_data.get(subj_id, 0)
+            remaining = max(0, planned - completed)
+            
+            summary.append({
+                "subject_id": subj_id,
+                "subject_name": data["subject_name"],
+                "planned_hours": planned,
+                "completed_hours": completed,
+                "remaining_hours": round(remaining, 2),
+                "progress_percent": round((completed / planned * 100) if planned > 0 else 100, 1),
+                "difficulty": data["difficulty"]
+            })
         
         return {"subjects": summary}
     
@@ -39,13 +54,13 @@ class DynamicScheduler:
         if not subjects:
             return self.current_allocations
         
+        # Calculate total workload to distribute
         total_remaining = sum(s.get("remaining_hours", 0) for s in subjects)
         
         if total_remaining <= 0:
-            return self.current_allocations
-        
+            return [] # Nothing left to do
+            
         priority_scores = []
-        
         for subj in subjects:
             score = 0
             subj_id = subj.get("subject_id", "")
@@ -59,20 +74,25 @@ class DynamicScheduler:
                     pass
             
             score += subj.get("remaining_hours", 0) * 3
-            
             if subj.get("progress_percent", 0) < 50:
                 score += 10
             
-            priority_scores.append((subj_id, score, subj))
+            # Use a mutable dictionary for subject data to track remaining hours across days
+            priority_scores.append({
+                "subj_id": subj_id,
+                "score": score,
+                "data": subj # This is already mutable from get_progress_summary
+            })
         
-        priority_scores.sort(key=lambda x: x[1], reverse=True)
+        priority_scores.sort(key=lambda x: x["score"], reverse=True)
         
         new_allocations = []
-        hours_per_day = total_remaining / max(remaining_days, 1)
+        # Target daily capacity based on what's left
+        target_daily_hours = total_remaining / max(remaining_days, 1)
         
-        for day in range(1, remaining_days + 1):
-            day_hours = min(hours_per_day, total_remaining / (remaining_days - day + 1))
-            remaining_for_day = day_hours
+        for d_idx in range(remaining_days):
+            day = d_idx + 1
+            remaining_for_day = target_daily_hours
             
             day_schedule = {
                 "day": day,
@@ -80,26 +100,35 @@ class DynamicScheduler:
                 "allocations": []
             }
             
-            for subj_id, _, subj_data in priority_scores:
+            for item in priority_scores:
                 if remaining_for_day <= 0:
                     break
                 
-                hours_to_alloc = min(subj_data.get("remaining_hours", 0), remaining_for_day)
+                subj_data = item["data"]
+                rem_subj = subj_data.get("remaining_hours", 0)
+                
+                if rem_subj <= 0:
+                    continue
+                
+                # Allocation for this day: min(what's left for subject, what's left for day's quota)
+                hours_to_alloc = min(rem_subj, remaining_for_day)
                 
                 if hours_to_alloc > 0:
                     day_schedule["allocations"].append({
-                        "subject_id": subj_id,
+                        "subject_id": item["subj_id"],
                         "subject_name": subj_data.get("subject_name", ""),
                         "allocated_hours": round(hours_to_alloc, 2),
-                        "difficulty": 3,
-                        "weight": round(hours_to_alloc / day_hours, 3) if day_hours > 0 else 0,
+                        "difficulty": subj_data.get("difficulty", 3),
+                        "weight": round(hours_to_alloc / target_daily_hours, 3) if target_daily_hours > 0 else 0,
                         "is_priority": True
                     })
                     
+                    # CRITICAL FIX: Decrement the remaining hours for this subject
+                    subj_data["remaining_hours"] -= hours_to_alloc
                     remaining_for_day -= hours_to_alloc
             
-            new_allocations.append(day_schedule)
-            total_remaining -= day_hours
+            if day_schedule["allocations"]:
+                new_allocations.append(day_schedule)
         
         return new_allocations
     

@@ -93,6 +93,18 @@ h3 { font-size: 1.25rem; font-weight: 500; color: var(--on-surface-variant); tex
     .container {
         grid-template-columns: 1fr;
         gap: 2rem;
+        padding: 2rem 1rem;
+    }
+    
+    .sidebar-data {
+        margin-top: 2rem !important;
+    }
+}
+
+@media (max-width: 1100px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
     }
 }
 
@@ -117,7 +129,12 @@ h3 { font-size: 1.25rem; font-weight: 500; color: var(--on-surface-variant); tex
 section {
     background-color: var(--surface-container-low);
     padding: 3rem;
-    /* No borders allowed */
+}
+
+@media (max-width: 600px) {
+    section {
+        padding: 1.5rem;
+    }
 }
 
 .input-section {
@@ -180,6 +197,27 @@ input:focus, select:focus {
     margin-bottom: 1rem;
     background-color: var(--surface-container-high);
     align-items: center;
+}
+
+@media (max-width: 850px) {
+    .subject-entry {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .subject-entry input, 
+    .subject-entry select {
+        font-size: 0.9rem;
+    }
+    
+    .remove-subject {
+        justify-self: end;
+        padding: 1rem;
+        background: rgba(255, 85, 85, 0.1);
+        width: 100%;
+        text-align: center;
+    }
 }
 
 /* --- Components: Buttons --- */
@@ -273,6 +311,17 @@ button {
     margin-bottom: 4rem;
 }
 
+@media (max-width: 768px) {
+    .schedule-info {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    .info-card {
+        padding: 1.5rem;
+    }
+}
+
 .info-card {
     text-align: left;
     border-left: 2px solid var(--outline-variant);
@@ -298,7 +347,9 @@ button {
 .day-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 2rem;
+    gap: 1rem;
 }
 
 .day-name {
@@ -329,11 +380,32 @@ button {
 }
 
 footer {
-    padding: 6rem 2rem 2rem;
+    padding: 6rem 1.5rem 2rem;
     text-align: left;
     color: var(--on-surface-variant);
     font-family: 'Space Grotesk', sans-serif;
     font-size: 0.75rem;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+    footer > div {
+        grid-template-columns: 1fr !important;
+        gap: 2.5rem !important;
+    }
+    
+    h1 { font-size: 1.8rem; }
+    .display-lg { font-size: 3rem; }
+    .info-value { font-size: 2.2rem; }
+    
+    /* Responsive metrics */
+    .metrics-section > div {
+        grid-template-columns: 1fr !important;
+        gap: 2rem !important;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
 }

@@ -1,7 +1,18 @@
-const API_BASE = ''; // Use relative paths for Vercel deployment
-
+// Identify system origin to set API context
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:8000' 
+    : ''; 
 
 let currentSchedule = null;
+
+// Utility: Get current date in YYYY-MM-DD format
+function getTodayDate() {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, '0');
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const yyyy = today.getFullYear();
+    return `${yyyy}-${mm}-${dd}`;
+}
 
 function addSubject() {
     const container = document.getElementById('subjectsList');
@@ -16,11 +27,12 @@ function addSubject() {
             <option value="4">Lvl 4 (Hard)</option>
             <option value="5" selected>Lvl 5 (Critical)</option>
         </select>
-        <input type="date" class="subject-deadline">
+        <input type="date" class="subject-deadline" min="${getTodayDate()}">
         <button type="button" class="remove-subject" onclick="removeSubject(this)">X</button>
     `;
     container.appendChild(entry);
 }
+
 
 function removeSubject(button) {
     const entries = document.querySelectorAll('.subject-entry');
@@ -201,3 +213,11 @@ async function loadMetrics() {
 }
 
 document.getElementById('scheduleForm').addEventListener('submit', generateSchedule);
+
+// Initialize system with contemporary temporal bounds
+window.addEventListener('DOMContentLoaded', () => {
+    const today = getTodayDate();
+    document.querySelectorAll('.subject-deadline').forEach(el => {
+        el.setAttribute('min', today);
+    });
+});
