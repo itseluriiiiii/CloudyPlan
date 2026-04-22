@@ -1,0 +1,11 @@
+# Exclude non-web related directories
+cloudsim/
+docs/
+tests/
+__pycache__/
+*.pyc
+.git/
+.gitignore
+README.md
+project_report.md
+deployment_plan.md
