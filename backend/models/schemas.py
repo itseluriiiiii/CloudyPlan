@@ -51,3 +51,26 @@ class ScheduleResponse:
 class ProgressUpdate:
     subject_id: str
     completed_hours: float
+
+@dataclass
+class RescheduleRequest:
+    pass
+
+@dataclass
+class MetricsResponse:
+    schedule_id: str
+    total_planned_hours: float
+    total_completed_hours: float
+    overall_progress_percent: float
+    fairness_index: float
+    subject_progress: List[Dict[str, Any]]
+
+@dataclass
+class SubjectResponse:
+    subject_id: str
+    subject_name: str
+    planned_hours: float
+    completed_hours: float
+    remaining_hours: float
+    progress_percent: float
+    difficulty: int

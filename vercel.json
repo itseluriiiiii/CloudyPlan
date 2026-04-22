@@ -1,16 +1,22 @@
 {
   "version": 2,
   "name": "cloudy-plan",
-  "experimentalServices": {
-    "frontend": {
-      "entrypoint": "frontend/index.html",
-      "routePrefix": "/"
-    },
-    "backend": {
-      "entrypoint": "backend/main.py",
-      "routePrefix": "/_/backend"
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
     }
-  },
+  ],
+  "rewrites": [
+    {
+      "source": "/_/backend/(.*)",
+      "destination": "/api/index.py"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/frontend/$1"
+    }
+  ],
   "env": {
     "PYTHONPATH": "backend"
   }
