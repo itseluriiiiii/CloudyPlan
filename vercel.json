@@ -3,7 +3,7 @@
   "name": "cloudy-plan",
   "experimentalServices": {
     "frontend": {
-      "entrypoint": "frontend",
+      "entrypoint": "frontend/index.html",
       "routePrefix": "/"
     },
     "backend": {
