@@ -1,0 +1,9 @@
+{
+  "name": "cloudy-plan-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "mkdir -p dist && cp index.html dist/ && cp -r css dist/ && cp -r js dist/",
+    "start": "serve dist"
+  }
+}
