@@ -80,7 +80,8 @@ async function generateSchedule(event) {
         });
         
         if (!response.ok) {
-            throw new Error('Load distribution failed.');
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || 'Load distribution failed.');
         }
         
         currentSchedule = await response.json();
@@ -88,7 +89,7 @@ async function generateSchedule(event) {
         
     } catch (error) {
         console.error('Core Logic Error:', error);
-        alert('CRITICAL FAILURE: Could not connect to API. Verify backend infrastructure.');
+        alert(`CRITICAL FAILURE: ${error.message}`);
     }
 }
 
@@ -168,9 +169,13 @@ async function updateProgress() {
         
         if (response.ok) {
             loadMetrics();
+        } else {
+            const errorData = await response.json().catch(() => ({}));
+            alert(`SYNC ERROR: ${errorData.error || 'Failed to sync progress.'}`);
         }
     } catch (error) {
         console.error('Status Sync Error:', error);
+        alert('CRITICAL FAILURE: Sync connection lost.');
     }
 }
 
@@ -190,9 +195,13 @@ async function reschedule() {
                 currentSchedule.daily_schedules = result.new_schedule;
                 displaySchedule(currentSchedule);
             }
+        } else {
+            const errorData = await response.json().catch(() => ({}));
+            alert(`OPTIMIZATION ERROR: ${errorData.error || 'Rescheduling failed.'}`);
         }
     } catch (error) {
         console.error('Optimization Failure:', error);
+        alert('CRITICAL FAILURE: Optimization engine unreachable.');
     }
 }
 

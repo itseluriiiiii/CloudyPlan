@@ -71,7 +71,7 @@ class ScheduleService:
         updates: List[Dict]
     ) -> Dict:
         if schedule_id not in self.schedules:
-            return {"error": "Schedule not found"}
+            return {"error": "Schedule not found. This can happen if the server instance restarted (ephemeral storage). Please regenerate your schedule."}
         
         for u in updates:
             self.schedules[schedule_id]["progress"][u["subject_id"]] = u["completed_hours"]
@@ -82,7 +82,7 @@ class ScheduleService:
         from algorithms.dynamic_scheduler import DynamicScheduler
         
         if schedule_id not in self.schedules:
-            return {"error": "Schedule not found"}
+            return {"error": "Schedule not found (Session Expired). Please regenerate your schedule."}
         
         sched = self.schedules[schedule_id]
         dynamic = DynamicScheduler(sched["daily_allocations"])
@@ -99,7 +99,7 @@ class ScheduleService:
         from algorithms.dynamic_scheduler import DynamicScheduler
         
         if schedule_id not in self.schedules:
-            return {"error": "Schedule not found"}
+            return {"error": "Schedule not found (Metrics Unavailable)."}
         
         sched = self.schedules[schedule_id]
         dynamic = DynamicScheduler(sched["daily_allocations"])
