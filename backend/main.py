@@ -1,5 +1,11 @@
+import os
+import sys
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+
+# Vercel Serverless Path Resolution
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from services.schedule_service import schedule_service
 from models.schemas import ScheduleCreate
 
