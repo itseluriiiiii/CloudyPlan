@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudyPlan</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="observatory-header">
+            <span class="label-sm">SYSTEM STATUS: OPTIMIZED</span>
+            <h1>CloudyPlan</h1>
+            <p>Cloud-derived study load balancing via weighted distribution algorithms.</p>
+        </header>
+        
+        <main class="input-section">
+            <span class="label-sm">INPUT PARAMETERS</span>
+            <h2>Configure Load Parameters</h2>
+            
+            <form id="scheduleForm">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div class="form-group">
+                        <label for="totalHoursDay" class="label-sm">Hours Per Cycle (Daily)</label>
+                        <input type="number" id="totalHoursDay" min="1" max="24" value="4" step="0.5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="totalHoursWeek" class="label-sm">Total Weekly Capacity</label>
+                        <input type="number" id="totalHoursWeek" min="1" max="168" value="20" step="0.5">
+                    </div>
+                </div>
+                
+                <div class="subjects-section">
+                    <span class="label-sm" style="margin-bottom: 1rem; display: block;">TARGET ANALYTES (SUBJECTS)</span>
+                    <div id="subjectsList">
+                        <div class="subject-entry">
+                            <input type="text" placeholder="SUBJECT IDENTITY" value="Mathematics" class="subject-name">
+                            <select class="subject-difficulty">
+                                <option value="1">Lvl 1 (Easy)</option>
+                                <option value="2">Lvl 2 (Medium)</option>
+                                <option value="3">Lvl 3 (Moderate)</option>
+                                <option value="4">Lvl 4 (Hard)</option>
+                                <option value="5" selected>Lvl 5 (Critical)</option>
+                            </select>
+                            <input type="date" class="subject-deadline">
+                            <button type="button" class="remove-subject" onclick="removeSubject(this)">X</button>
+                        </div>
+                    </div>
+                    <button type="button" class="add-subject-btn" onclick="addSubject()">+ Add Subject Analyte</button>
+                </div>
+                
+                <button type="submit" class="generate-btn">Execute Distribution</button>
+            </form>
+        </main>
+
+        <!-- Sidebar / Supplemental Data -->
+        <aside class="sidebar-data" style="margin-top: 130px;">
+            <span class="label-sm">ALGORITHMIC FOOTPRINT</span>
+            <p style="color: var(--on-surface-variant); font-size: 0.875rem; margin-top: 1rem;">
+                Utilizing a weighted round-robin distribution to ensure peak academic throughput while maintaining system integrity across all study nodes.
+            </p>
+        </aside>
+        
+        <section class="results-section" id="resultsSection" style="display: none;">
+            <div style="margin-bottom: 3rem;">
+                <span class="label-sm">OUTPUT DATASET</span>
+                <h2>Load Distribution Report</h2>
+            </div>
+            
+            <div class="schedule-info">
+                <div class="info-card">
+                    <span class="label-sm">ALLOCATED WEEKLY</span>
+                    <div class="info-value" id="totalWeeklyHours">-</div>
+                </div>
+                <div class="info-card">
+                    <span class="label-sm">DAILY THROUGHPUT</span>
+                    <div class="info-value" id="totalDailyHours">-</div>
+                </div>
+                <div class="info-card">
+                    <span class="label-sm">TOTAL NODES</span>
+                    <div class="info-value" id="subjectCount">-</div>
+                </div>
+            </div>
+            
+            <div class="daily-schedules" id="dailySchedules"></div>
+            
+            <div class="metrics-section" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--outline-variant);">
+                <span class="label-sm">EFFICIENCY METRICS</span>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-top: 2rem;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span class="label-sm">JAIN'S FAIRNESS INDEX</span>
+                            <span id="fairnessIndex" style="font-family: 'Space Grotesk'; font-weight: 700; color: var(--tertiary);">0.985</span>
+                        </div>
+                        <div class="pulse-bar-container">
+                            <div class="pulse-bar-indicator" id="fairnessBar" style="width: 98.5%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span class="label-sm">COMPLETION PROGRESS</span>
+                            <span id="progressPercent" style="font-family: 'Space Grotesk'; font-weight: 700; color: var(--primary);">0%</span>
+                        </div>
+                        <div class="pulse-bar-container">
+                            <div class="pulse-bar-indicator" id="progressBar" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="action-buttons" style="margin-top: 4rem; display: flex; gap: 1rem;">
+                <button class="add-subject-btn" style="flex: 1;" onclick="updateProgress()">Update Node Status</button>
+                <button class="add-subject-btn" style="flex: 1; border: 1px solid var(--primary);" onclick="reschedule()">Re-optimize Schedule</button>
+            </div>
+        </section>
+        
+        <footer>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; padding-bottom: 2rem;">
+                <div>
+                    <span class="label-sm" style="display: block; margin-bottom: 1rem; color: var(--primary);">PROJECT GIST</span>
+                    <p style="text-transform: none; letter-spacing: normal; font-family: 'Inter'; font-size: 0.9rem;">
+                        CloudyPlan is a specialized study optimization engine that applies cloud load-balancing principles to academic workload management. By implementing weighted distribution algorithms and Jain’s Fairness Index, it ensures peak intellectual throughput and eliminates focus-starvation across disparate study nodes.
+                    </p>
+                </div>
+                <div>
+                    <span class="label-sm" style="display: block; margin-bottom: 1rem; color: var(--primary);">DEVELOPMENT TEAM</span>
+                    <ul style="list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                        <li>Abhilash KM</li>
+                        <li>Akshay K</li>
+                        <li>Anish Shetty</li>
+                        <li>Arnav Eluri</li>
+                    </ul>
+                </div>
+            </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>

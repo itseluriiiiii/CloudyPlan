@@ -1,0 +1,339 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Surface Hierarchy (The Computational Ledger) */
+    --surface: #0a0e14;
+    --surface-container-low: #0f141a;
+    --surface-container-high: #1b2028;
+    --surface-container-highest: #20262f;
+    --surface-container-lowest: #05080c; /* For inset effects */
+    --surface-bright: #2a313a;
+
+    /* Primaries (The Academic Cloud) */
+    --primary: #69daff;
+    --primary-dim: #00c0ea;
+    --on-primary: #0a0e14;
+    
+    /* Semantic Colors */
+    --tertiary: #00ffaa; /* Efficiency/Success */
+    --secondary: #ffaa00; /* Warning/Alert */
+    --error: #ff5555;
+    
+    /* Typography & Depth */
+    --on-surface: #f1f3fc;
+    --on-surface-variant: #8e9196;
+    --outline-variant: rgba(68, 72, 79, 0.15); /* Ghost Border */
+    --ghost-border-focus: rgba(68, 72, 79, 0.5);
+    
+    /* Gradients */
+    --hero-gradient: linear-gradient(135deg, var(--primary), var(--primary-dim));
+    --pulse-gradient: linear-gradient(90deg, var(--primary), var(--primary-dim));
+    
+    /* Shadows & Effects */
+    --bloom-shadow: 0 0 40px rgba(105, 218, 255, 0.04);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: crosshair; /* Added to fit the technical observatory vibe */
+}
+
+body {
+    background-color: var(--surface);
+    color: var(--on-surface);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* --- Typography System --- */
+
+h1, h2, h3, .headline, .label-sm {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.display-lg {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1.1;
+    background: var(--hero-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h1 { font-size: 2.5rem; font-weight: 600; }
+h2 { font-size: 1.75rem; font-weight: 500; }
+h3 { font-size: 1.25rem; font-weight: 500; color: var(--on-surface-variant); text-transform: uppercase; letter-spacing: 0.1em; }
+
+.label-sm {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--on-surface-variant);
+    letter-spacing: 0.15em;
+}
+
+/* --- Layout Architecture --- */
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 400px; /* Intentional Asymmetry */
+    gap: 4rem;
+}
+
+@media (max-width: 1100px) {
+    .container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+.observatory-header {
+    grid-column: 1 / -1;
+    padding-bottom: 4rem;
+    position: relative;
+}
+
+.observatory-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 200px;
+    height: 1px;
+    background: var(--hero-gradient);
+}
+
+/* --- Atmospheric Sections --- */
+
+section {
+    background-color: var(--surface-container-low);
+    padding: 3rem;
+    /* No borders allowed */
+}
+
+.input-section {
+    grid-column: 1;
+}
+
+.results-section {
+    grid-column: 1 / -1; /* Experimental layout shift */
+    background-color: var(--surface-container-low);
+    margin-top: 2rem;
+}
+
+/* --- Components: Modules (Cards) --- */
+
+.card, .subject-entry, .info-card, .day-card, .metric-card {
+    background-color: var(--surface-container-high);
+    padding: 1.5rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.card:hover, .day-card:hover {
+    background-color: var(--surface-bright);
+}
+
+/* --- Components: Inputs --- */
+
+.form-group {
+    margin-bottom: 2.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.75rem;
+}
+
+input[type="number"],
+input[type="text"],
+input[type="date"],
+select {
+    width: 100%;
+    background-color: var(--surface-container-lowest);
+    color: var(--on-surface);
+    border: none;
+    outline: 1px solid var(--outline-variant);
+    padding: 1rem 1.25rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1rem;
+    transition: outline-color 0.2s, background-color 0.2s;
+}
+
+input:focus, select:focus {
+    outline: 1px solid var(--ghost-border-focus);
+    background-color: var(--surface-container-low);
+}
+
+.subject-entry {
+    display: grid;
+    grid-template-columns: 1fr 150px 180px auto;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    background-color: var(--surface-container-high);
+    align-items: center;
+}
+
+/* --- Components: Buttons --- */
+
+button {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+}
+
+.generate-btn {
+    background: var(--hero-gradient);
+    color: var(--on-primary);
+    padding: 1.25rem 3rem;
+    font-size: 1.1rem;
+    border-radius: 0.125rem;
+    width: auto;
+    margin-top: 1rem;
+    box-shadow: 0 10px 20px rgba(0, 192, 234, 0.2);
+}
+
+.generate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(0, 192, 234, 0.3);
+}
+
+.add-subject-btn {
+    background: var(--surface-container-highest);
+    color: var(--primary);
+    outline: 1px solid var(--outline-variant);
+    padding: 0.75rem 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.add-subject-btn:hover {
+    outline-color: var(--primary);
+    background: var(--surface-bright);
+}
+
+.remove-subject {
+    background: transparent;
+    color: var(--error);
+    opacity: 0.5;
+    padding: 0.5rem;
+}
+
+.remove-subject:hover {
+    opacity: 1;
+}
+
+/* --- Components: Progress & Health --- */
+
+.pulse-bar-container {
+    height: 4px;
+    background: var(--surface-container-highest);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.pulse-bar-indicator {
+    height: 100%;
+    background: var(--pulse-gradient);
+    width: 0%;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Glow Points */
+.glow-point {
+    width: 8px;
+    height: 8px;
+    background-color: var(--tertiary);
+    box-shadow: 0 0 8px var(--tertiary);
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.glow-point.warning { background-color: var(--secondary); box-shadow: 0 0 8px var(--secondary); }
+.glow-point.error { background-color: var(--error); box-shadow: 0 0 8px var(--error); }
+
+/* --- Data Visualizations (Manual implementation) --- */
+
+.schedule-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-bottom: 4rem;
+}
+
+.info-card {
+    text-align: left;
+    border-left: 2px solid var(--outline-variant);
+}
+
+.info-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--on-surface);
+}
+
+.daily-schedules {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.day-card {
+    box-shadow: var(--bloom-shadow);
+}
+
+.day-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.day-name {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.subject-item {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03); /* Ghost divider */
+}
+
+.subject-item:last-child { border-bottom: none; }
+
+.subject-hours {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* Glassmorphism for specific UI layers */
+.glass-panel {
+    background: rgba(32, 38, 47, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+footer {
+    padding: 6rem 2rem 2rem;
+    text-align: left;
+    color: var(--on-surface-variant);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
